@@ -1,0 +1,103 @@
+\usepackage{
+  amsfonts,
+  amsmath, 
+  amssymb, 
+  amsthm,
+  array,
+  bm,
+  booktabs,
+  caption,
+  enumitem,
+  longtable,
+  mathtools,
+  setspace,
+  stmaryrd,
+}
+\usepackage[
+  colorlinks=true,
+  citecolor=blue,
+  linkcolor=magenta
+]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[most]{tcolorbox}
+\usepackage[dvipsnames]{xcolor}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\let\Im\relax
+\let\Re\relax
+\DeclareMathOperator{\Im}{Im}
+\DeclareMathOperator{\Re}{Re}
+\renewcommand{\tilde}[1]{\widetilde{\smash{{#1}}}}
+\newcommand{\noqed}{\renewcommand{\qedsymbol}{}}
+
+\DeclareMathOperator*{\prob}{Prob}
+\DeclareMathOperator*{\E}{\mathbb E}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\Haar}{Haar}
+
+\usepackage[
+  backend=biber,
+  sorting=none,
+  citestyle=numeric-comp,
+  giveninits=true,
+  doi=false,
+  isbn=false,
+  url=false,
+  maxbibnames=6
+]{biblatex}
+\renewbibmacro{in:}{}
+
+\DeclareFieldFormat{labelalpha}{\textbf{\small #1}}
+\DefineBibliographyStrings{english}{
+  backrefpage  = {cited p.},
+  backrefpages = {cited pp.}
+}
+\DeclareFieldFormat{journaltitle}{\textit{#1},}
+\DeclareFieldFormat[inbook,thesis]{title}{\textit{#1}\addperiod}
+\DeclareFieldFormat[article]{title}{#1}
+\DeclareFieldFormat[article]{volume}{\textbf{#1}\addcolon\space}
+\DeclareFieldFormat[misc]{title}{\textit{#1}}
+\DeclareSourcemap{\maps[datatype=bibtex]{\map{\step[fieldsource=ISBN-13,fieldtarget=ISBN]}}}
+
+\allowdisplaybreaks
+\captionsetup{font=small}
+
+\renewcommand{\emph}[1]{\textbf{\textit{\textcolor{Blue}{#1}}}}
+\tcbset{
+  every box/.style={
+    colback=gray!5,
+    colframe=black,
+    arc=2mm,
+    boxrule=1pt,
+    after skip=10pt,
+    before skip=10pt,
+  }
+}
+
+\usepackage{titlesec}
+\titleformat{\section}
+  {\sffamily\Large\bfseries} % format: sans-serif + large + bold
+  {\thesection}{1em}{}       % label format
+
+\titleformat{\subsection}
+  {\sffamily\large\bfseries}
+  {\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+  {\sffamily\normalsize\bfseries}
+  {\thesubsubsection}{1em}{}

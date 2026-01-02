@@ -1,0 +1,739 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[margin=.9in]{geometry}
+\usepackage{myproofs}
+\usepackage{array, booktabs, longtable}
+
+\addbibresource{references.bib}
+
+\begin{document}
+\title{\sffamily \textbf{Asymptotics of Localizing Entanglement}}
+\author{Leo Lee \and Abigail Vaughan-Lee \and Christopher Vairogs \and Jacob Beckey}
+\date{July 26, 2025}
+\maketitle
+
+\section{Preliminaries}
+Let us first introduce common notations used throughout the document.
+
+\small
+\renewcommand{\arraystretch}{1.1}
+\begin{longtable}[c]{|>{\centering\arraybackslash}p{2cm}|p{13cm}|}
+    \caption{Common notations in this document} \label{tab:table-one} \vspace{-3pt} \\
+
+    \hline
+    \textbf{Notation} & \multicolumn{1}{c|}{\textbf{Definition}} \\
+    \specialrule{1pt}{0pt}{0pt}
+    \endfirsthead
+    
+    \hline
+    \textbf{Notation} & \multicolumn{1}{c|}{\textbf{Definition}} \\
+    \hline
+    \endhead
+
+    \hline \endfoot
+    \hline \endlastfoot
+
+    $\mathcal H$ & Finite-dimensional Hilbert space \\
+    \hline
+    $\mathcal L(\mathcal H)$ & Set of linear operators over $\mathcal H$ \\
+    \hline
+    $\mathrm U(d)$ & Unitary group, or $\{U \in \mathcal L(\C^d) \mid U^{\dagger}U = I\}$ \\
+    \hline
+    $d_A$ & Dimension of system $A$, or $\dim \mathcal H_A$ \\
+    \hline
+    $\mathcal{C}(\mathcal{H})$ & Collection of ordered orthonormal bases of $\mathcal{H}$ \\
+    \hline
+    $\mathcal{P}(\bigotimes\mathcal H_i)$ & $\smash\bigotimes_{i\,} \mathcal C(\mathcal H_i) = \{\smash\bigotimes_{i\,} \beta_i \mid \beta_i \in \mathcal C(\mathcal H_i)\}$ \\
+    \hline
+    $|i\rangle$ & Orthonormal basis (a set of vectors) \\
+    \hline
+    $\psi$ & Shorthand for $|\psi\rangle\langle \psi|$, the density matrix associated with $|\psi\rangle$ \\
+    \hline
+    $|\varphi\rangle|\psi\rangle$ & Shorthand for $|\varphi\rangle \otimes |\psi\rangle$ \\
+    \hline
+    $f(\psi)$ & Shorthand for $f(|\psi\rangle)$ for some function $f$ \\
+    \hline
+    $|\tilde\psi\rangle$ & Wootter's tilde, given by $\sigma_y^{\otimes n}|\psi^*\rangle$ \\
+    \hline
+    $\tau_n(|\psi\rangle)$ & $n$-tangle, given by $|\langle \psi | \tilde\psi \rangle|$ \\
+    \hline
+    $L^{\tau}(|\Psi\rangle)$ & Localizable entanglement of $| \Psi \rangle$ with respect to the $n$-tangle \\
+    \hline
+    $\Haar(d)$ & Haar measure on the unitary group $\mathrm U(d)$
+\end{longtable}
+\normalsize
+
+\subsection{Linear Algebra}
+
+\begin{definition}[Vector $p$-norm]
+    For $|v\rangle \in \C^d$ and $p\in[1,\infty]$, the \emph{$\bm p$-norm} of $|v\rangle$ is given by $\| |v\rangle \|_p \coloneq \big(\sum_{i=1}^d |v_i|^p \big)^{1/p}$. In particular, $\| |v\rangle \|_2 = \sqrt{\langle v|v\rangle}$ and $\| |v\rangle \|_\infty = \max_i |v_i|$.
+\end{definition}
+
+\begin{definition}[Matrix $p$-norm]
+    For an operator $A$ and $p\in[1,\infty]$, the \emph{$\bm p$-norm} of $A$ is given by $\| A\|_p \coloneq \tr\big[(\sqrt{A^\dagger A})^p\big]^{1/p}$, which corresponds to the $p$-norm of the vector of singular values of $A$. In particular, we call $\|\cdot\|_1$ the \emph{trace norm} and $\|\cdot\|_2$ the \emph{Hilbert-Schmidt norm}.
+\end{definition}
+
+\begin{definition}[State]
+    A \emph{(quantum) state} is represented by a vector $|\psi\rangle \in \mathcal H$ with $\||\psi\rangle\|_2 = 1$.
+\end{definition}
+
+\begin{lemma} \label{lemma:nielson-chuang-p76} For all normalized $|\psi\rangle \in \C^d$ and for all operators $A\in \mathcal L(\C^d)$, we have
+    \begin{equation}
+        \tr[A|\psi\rangle \langle\psi|] = \langle \psi|A|\psi \rangle.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Let $\{|v_i\rangle\}_{i=1}^d$ be an orthonormal basis with $|v_1\rangle = |\psi\rangle$. Since the trace of an operator is invariant under a similarity transformation, we have
+    \begin{equation} \textstyle
+        \tr[A |\psi\rangle\langle\psi|]
+        = \sum_{i=1}^d \langle v_i | A |\psi\rangle \langle\psi| v_i \rangle = \langle \psi| A |\psi \rangle.
+    \end{equation} 
+\end{proof}
+
+\begin{lemma} \label{lemma:trace-to-inner}
+    For all states $|u\rangle, |v\rangle \in \mathcal H$, we have
+    \begin{equation}
+        \||u\rangle\langle u| - |v\rangle\langle v|\|_1 = 2\sqrt{1-|\langle u|v\rangle|^2}.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    Let $A = |u\rangle\langle u| - |v\rangle\langle v|$ for simplicity. Obviously, $\rk(A) \le 2$, which implies that there are at most $2$ non-zero eigenvalues of $A$: let us denote them by $\lambda_1$ and $\lambda_2$. Then
+    \begin{equation}
+        \lambda_1 + \lambda_2 = \tr[A] = \tr[u-v] = \tr[u] - \tr[v] = 1-1 = 0\implies \lambda_2 = -\lambda_1.
+    \end{equation}
+    Observe that
+    \begin{align}
+        2\lambda_1^2 = \lambda_1^2 + \lambda_2^2 = \tr[A^2] &= \tr[(u-v)^2] \\
+        &= \tr[u^2 - uv - vu + v^2] \\
+        &= \tr[u^2] - \tr[uv] - \tr[vu] + \tr[v^2] \\
+        &= 2 - 2|\langle u|v\rangle|^2, & \text{(by Lemma~\ref{lemma:nielson-chuang-p76})}
+    \end{align}
+    which gives $|\lambda_1| = \sqrt{1-|\langle u|v\rangle|^2}$. Obviously, $A$ is Hermitian, so $\lambda_1,\lambda_2\in \mathbb R$. Finally,
+    \begin{align} \textstyle
+        \|u-v\|_1 = \| A\|_1 = \tr[\sqrt{A^\dagger A}] = \tr[\sqrt{A^2}] = \sqrt{\lambda_1^2} + \sqrt{\lambda_2^2} = |\lambda_1| + |\lambda_2| &= 2|\lambda_1| \nonumber \\ &= 2\sqrt{1-|\langle u|v\rangle|^2}.
+    \end{align}
+\end{proof}
+
+\begin{corollary} \label{cor:trace-hilbert-link}
+    For all states $|u\rangle, |v\rangle \in \mathcal H$, we have
+    \begin{equation}
+        \||u\rangle\langle u| - |v\rangle\langle v|\|_1 \le 2\| |u\rangle - |v\rangle\|_2.
+    \end{equation}
+\end{corollary}
+
+\begin{proof} By Lemma~\ref{lemma:trace-to-inner},
+    \begin{align}
+        \| |u\rangle\langle u| - |v\rangle\langle v|\|_1 = 2\sqrt{1-|\langle u|v\rangle|^2} \label{eq:trace-to-inner} &\le 2\sqrt{2 - 2|\langle u|v\rangle|} \\
+        &\le 2\sqrt{2-2\operatorname{Re}(\langle u|v\rangle)} \\
+        &= 2\sqrt{\langle u|u\rangle - \langle u|v\rangle -\langle v|u\rangle + \langle v|v\rangle} \\
+        &= 2\sqrt{(\langle u|-\langle v|)(|u\rangle - |v\rangle)} \\
+        &= 2\| |u\rangle -|v\rangle\|_2.
+    \end{align}
+\end{proof}
+
+Finally, we state the following without proof.
+
+\begin{theorem}[Triangle inequality for trace norms] \label{thm:triangle-ineq-1norm}
+    For complex matrices $M$ and $N$ with same dimensions, we have the following inequality:
+    \begin{equation}
+        \|M+N\|_1 \le \|M\|_1 + \|N\|_1.
+    \end{equation}
+\end{theorem}
+
+\subsection{Basis Epsilon-Net}
+
+\begin{comment}
+In this section, a \emph{maximal set} $\mathcal M$ such that predicate $P(\mathcal M)$ holds indicates that $\neg P(\mathcal M')$ for all $\mathcal M' \supset \mathcal M$. It is crucial to recognize that $\mathcal M$ is not necessarily unique despite being called maximal.
+\end{comment}
+
+\begin{definition}[$\varepsilon$-net] \label{def:eps-net} For $\varepsilon>0$, if a set $\mathcal N \subseteq \mathcal H$ satisfies that for all states $|\varphi\rangle \in \mathcal H$ there exists a state $|\eta\rangle \in \mathcal N$ such that $\||\varphi\rangle\langle\varphi| - |\eta\rangle\langle\eta|\|_1 \le \varepsilon$, then we call $\mathcal N$ an \emph{$\bm \varepsilon$-net} on $\mathcal H$.
+\end{definition}
+
+\begin{lemma} \label{lemma:haydenII4} For $\varepsilon \in (0,1)$ and $\dim \mathcal H = d$ there exists an $\varepsilon$-net $\mathcal M$ on $\mathcal H$ with $|\mathcal M| \le (5/\varepsilon)^{2d}$ \parencite[Lemma~II.4]{Hayden_2004}.
+\end{lemma}
+
+\begin{comment}
+\begin{lemma}[p.~2 \cite{Gross2009}]
+    For $k\in\N$ and $\varepsilon \in (0,k)$ there exists an $\varepsilon$-net $\mathcal N_{\varepsilon, k}$ on the set
+    \[ \textstyle
+        \mathcal P \coloneq \big\{\bigotimes_{i=1}^k |\varphi_i\rangle \,\mid\, \forall i\in \llbracket k\rrbracket,\, |\varphi_i\rangle \in \C^2 \big\}
+    \]
+    of product states on $k$-qubits with $|\mathcal N_{\varepsilon, k}| \le (5k/\varepsilon)^{4k}$.
+\end{lemma}
+
+
+\begin{definition}[$\varepsilon$-net over pure states] \label{def:haydenII4}
+    For $\varepsilon\in(0,1)$ and $\mathcal H'\subseteq \mathcal H$, an \emph{$\bm \varepsilon$-net} $\mathcal N$ over $\mathcal H'$ satisfies
+    \[
+        \forall |\varphi\rangle \in \mathcal H',\ \exists |\eta\rangle \in \mathcal N ~s.t.~ \| \varphi - \eta\|_1 \le \varepsilon.
+    \]
+\end{definition}
+
+\begin{proof}[Proof of existence]
+    First, let us establish the following proposition.
+    
+    \begin{proposition} \label{prop:uni}
+    For $\delta> 0$, there exists a maximal set $\mathcal N \subseteq \mathcal H'$ such that $\| |\varphi_i\rangle - |\varphi_j\rangle\|_2 > \delta$ for all $i\neq j$.
+    \end{proposition}
+
+    \begin{proof}[Proof of Prop.\,\ref{prop:uni}]
+        First, Zorn's lemma states that:
+
+        \begin{lemma}[Zorn's lemma]
+        \textit{Suppose that for any chain $C$ in a nonempty partially ordered set $(X, \leq)$, there exists an element $a\in X$ such that $c \leq a$ for all $c\in C$. Then $(X, \leq)$ has a maximal element.}
+        \end{lemma}
+    
+        Let $\mathcal P$ be the collection of all sets of pure states such that $\||\varphi_i\rangle - |\varphi_j\rangle\|_2 > \delta$ for all $i\neq j$, that is,
+        \begin{equation}
+            \mathcal P = \{S = \{\varphi_i\}_{i=1}^s\subset \mathcal H' \,\mid\, \forall i\neq j,\,\| |\varphi_i\rangle -|\varphi_j\rangle\|_2 > \delta\}.
+        \end{equation}
+        Note that any subset of $\mathcal H'$ containing exactly one state is trivially in $\mathcal P$, so $\mathcal P\neq \varnothing$. Thus, $(\mathcal P,\subseteq)$ is a nonempty partially ordered set.
+        
+        Let $C$ be an arbitrary chain in $\mathcal P$. In order that $c\le a$ for all $c\in C$, we may choose $a = \bigcup_{S\in C} S$ for nonempty $C$ and $a = \{|0\rangle\}$ otherwise. Hence, by Zorn's lemma, $(\mathcal P, \subseteq)$ has a maximal element.
+    \end{proof}
+
+We can finish proof of the existence of $\mathcal N$ as in Def.~\ref{def:haydenII4} using the following proposition.
+
+\begin{proposition}[Choice of $\varepsilon$-net] \label{prop:hell-of-a-choice}
+    The maximal set $\mathcal N = \{|\varphi_i\rangle\}_{i=1}^N \subseteq \mathcal H'$ such that $\| |\varphi_i\rangle - |\varphi_j\rangle \|_2 > \varepsilon/2$ for all $i\neq j$ is an $\varepsilon$-net. (By Prop.\,\ref{prop:uni}, such $\mathcal N$ exists.)
+\end{proposition}
+
+\noindent For all $|\varphi\rangle \in \mathcal H'$, if $|\varphi\rangle\in \mathcal N$, then we may choose $|\eta \rangle = |\varphi\rangle \in \mathcal N$ so that $0 = \left\| \varphi - \eta\right\|_1 \le \varepsilon$; if $|\varphi\rangle \notin \mathcal N$, then by the maximality of $\mathcal N$, there exists $|\eta\rangle\in \mathcal N$ such that
+    \begin{equation} 
+        \| \varphi - \eta\|_1 \le 2\| |\varphi \rangle - |\eta\rangle\|_2 \le 2\cdot \tfrac \varepsilon 2 = \varepsilon\,,
+    \end{equation}
+    where the first inequality is given by Cor.~\ref{cor:trace-hilbert-link}. We are done.
+\end{proof}
+
+\begin{proposition} \label{prop:epsnet-1qudit-bound} For $\varepsilon \in (0,1)$, there exists an $\varepsilon$-net $\mathcal M$ over $\C^d$ with $|\mathcal M| \le (5/\varepsilon)^{2d}.$
+\end{proposition}
+
+\begin{proof}
+By Prop.~\ref{prop:hell-of-a-choice}, we choose $\mathcal M = \{\varphi_i\}_{i=1}^m$ to be the maximal set such that $\| |\varphi_i\rangle - |\varphi_j\rangle \|_2 > \varepsilon/2$ for all $i\neq j$. We will estimate $|\mathcal M|$ by a volume argument: As subsets of $\mathbb R^{2d}$ ($\mathbb C^d\cong \mathbb R^{2d}$), the open balls of radius $\varepsilon/4$ about each $|\varphi_i\rangle \in \mathcal M$ are pairwise disjoint and all contained in the ball of radius $1+\frac \varepsilon4$ centered at the origin. Therefore, given that the $n$-dimensional volume of a Euclidean ball of radius $r$ in $\mathbb R^n$ is
+\begin{equation}
+    V_n(r) = \frac{\pi^{n/2}}{\Gamma(\tfrac n2+1)}r^n,
+\end{equation}
+where $\Gamma(z)$ is the gamma function, we can obtain {\setlength{\jot}{6pt}
+\begin{align}
+    |\mathcal M|\cdot V_{2d}\left(\frac \varepsilon 4\right)\le V_{2d}\left(1 +\frac\varepsilon 4\right) ~\iff~ &|\mathcal M|\cdot \frac{\pi^d}{d!}\left(\frac\varepsilon 4\right)^{2d} \le \frac{\pi^d}{d!}\left(1+\frac\varepsilon 4\right)^{2d} \\ 
+    ~\implies~ &|\mathcal M| \le \left(1 + \frac 4\varepsilon\right)^{2d}\le \left(\frac 5\varepsilon\right)^{2d}. &\varepsilon < 1
+\end{align}
+}
+\end{proof}
+
+\begin{proposition} \label{prop:epsnet-kqubit-bound}
+    Let $\mathcal P$ be the set of product states on $k$ qubits, i.e.,
+    \begin{equation} \textstyle
+        \mathcal P = \big\{\bigotimes_{i=1}^k |\psi_i\rangle \,\mid\, \forall i\in\llbracket k\rrbracket,\, |\psi_i\rangle \in \C^2 \big\}.
+    \end{equation}
+    Then for $\varepsilon \in (0,k)$, there exists an $\varepsilon$-net $\mathcal N_{\varepsilon, k}$ over $\mathcal P$ with $|\mathcal N_{\varepsilon, k}| \le (5k/\varepsilon)^{4k}$.
+\end{proposition}
+
+\begin{proof}
+    Let $\mathcal M = \{\varphi_i\}_{i=1}^m \subset \C^2$ be a maximal set such that $\| |\varphi_i\rangle - |\varphi_j\rangle \|_2 > \varepsilon/2k$ for all $i\neq j$. By Prop.~\ref{prop:hell-of-a-choice} and Prop.~\ref{prop:epsnet-1qudit-bound}, $\mathcal M$ is an existent $(\varepsilon/k)$-net whose cardinality is bounded by $(5k/\varepsilon)^4$. Let
+    \begin{equation} \label{eq:choice-of-Nek} \textstyle
+        \mathcal N_{\varepsilon, k} = \big\{ \bigotimes_{i=1}^k |\eta_i\rangle \,\mid\, \forall i \in \llbracket k \rrbracket,\, |\eta_i\rangle \in \mathcal M \big\}.
+    \end{equation}
+    Then for all $|\varphi\rangle = \bigotimes_{i=1}^k |\varphi_i\rangle \in \mathcal P$, there are $|\eta_1\rangle$, $|\eta_2\rangle$, $\dots$, $|\eta_k\rangle$ such that for all $i\in\llbracket k\rrbracket$,
+    \begin{equation}
+        2\sqrt{1 - |\langle \eta_i | \varphi_i \rangle|^2} = \|\eta_i - \varphi_i\|_1 \le \varepsilon/k
+    \end{equation}
+    where the equality is given by Lemma~\ref{lemma:trace-to-inner}. Therefore,
+    \begin{align}
+        |\langle \eta_i | \varphi_i \rangle|^2 \ge 1 - \left(\varepsilon/2k\right)^2 = 1-\varepsilon^2/4k^2 \ge 1-\varepsilon^2/4k.
+    \end{align}
+    Hence, for $|\eta\rangle = \bigotimes_{i=1}^k |\eta_i\rangle \in \mathcal N_{\varepsilon,k}$, we have
+    \begin{equation} \label{eq:prop-epkq-contd} \textstyle
+        |\langle \eta|\varphi \rangle|^2 = \prod_{i=1}^k |\langle \eta_i|\varphi_i \rangle|^2 \ge (1-\varepsilon^2/4k)^k \ge 1-\varepsilon^2/4,
+    \end{equation}
+    where the last inequality is given by the following lemma:
+
+    \begin{lemma}[Bernoulli's inequality] \label{lemma:bernoulli-ineq} For all $x\in(0,1)$ and for all $r\in\N$, we have
+        \begin{equation} \label{eq:bernoulli-ineq}
+            (1-x)^r \ge 1-rx.
+        \end{equation}
+    \end{lemma}
+
+    \begin{proof}[Proof of Lemma~\ref{lemma:bernoulli-ineq} by induction on $r$] The base case when $r=1$ is trivial. Suppose that Eq.~\eqref{eq:bernoulli-ineq} holds when $r=k$ for some $k\in\mathbb N$. The following relation shows that Eq.~\eqref{eq:bernoulli-ineq} holds when $r=k+1$:
+        \begin{align}
+            (1-x)^{k+1} = (1-x)^k(1-x) \ge (1-kx)(1-x) &= 1-(k+1)x + kx^2\nonumber \\ &>  1-(k+1)x.
+        \end{align}
+    \end{proof}
+
+    \noindent \textit{(Proof of Prop.\,\ref{prop:epsnet-kqubit-bound} continued.)}\, Finally, using Lemma~\ref{lemma:trace-to-inner} again, from Eq.~\eqref{eq:prop-epkq-contd} we have
+    \begin{equation}
+        \| \eta - \varphi \|_1 = 2\sqrt{1-|\langle \eta | \varphi\rangle|^2} \le \varepsilon,
+    \end{equation}
+    and by Def.~\ref{def:haydenII4}, $\mathcal N_{\varepsilon, k}$ is an $\varepsilon$-net over $\mathcal P$. 
+    
+    As for the cardinality bound, Eq.~\eqref{eq:choice-of-Nek} implies $|\mathcal N| = |\mathcal M|^k \le (5k/\varepsilon)^k$.
+\end{proof}
+\end{comment}
+
+\begin{definition}[Collection of bases] The collection of orthonormal bases in $\mathcal H$ is denoted by $\mathcal C(\mathcal H)$.
+\end{definition}
+
+\begin{definition}[Basis-norm] \label{def:basis-norm} For $\dim \mathcal H = d$ and $\beta = \{|\varphi_i\rangle\}_{i=1}^d,\, \gamma = \{|\eta_i\rangle\}_{i=1}^d \in \mathcal C(\mathcal H)$, we define
+    \begin{equation}
+        \| \beta - \gamma\|_B \coloneq \max_{1\le i\le d} \| |\varphi_i\rangle\langle\varphi_i| - |\eta_i\rangle\langle\eta_i|\|_1.
+    \end{equation}
+\end{definition}
+
+\begin{definition}[Product basis] \label{def:product-basis} For $\beta = \{|\varphi_i\rangle\}_{i=1}^{d_1} \in \mathcal C(\mathcal H_1)$ and $\gamma = \{|\eta_j\rangle\}_{j=1}^{d_2} \in \mathcal C(\mathcal H_2)$, we define $\beta \otimes \gamma \in \mathcal C(\mathcal H_1\otimes \mathcal H_2)$ to be the ordered basis
+    \begin{equation}
+        \beta\otimes \gamma \coloneq \{|\varphi_1\rangle  |\eta_1\rangle, \dots, |\varphi_{d_1}\rangle  |\eta_1\rangle, |\varphi_1\rangle  |\eta_2\rangle, \dots, |\varphi_{d_1}\rangle  |\eta_2\rangle, \dots, |\varphi_1\rangle  |\eta_{d_2}\rangle, \dots, |\varphi_{d_1}\rangle  |\eta_{d_2}\rangle\}.
+    \end{equation}
+\end{definition}
+
+\begin{definition}[Collection of product bases] \label{def:product-space-basis}
+    For Hilbert spaces $\mathcal{H}_1$, $\mathcal{H}_2$, $\dots$, $\mathcal{H}_n$ and $\mathcal H = \bigotimes_{i=1}^n \mathcal H_i$, we define
+    \begin{equation} \textstyle 
+        \mathcal{P}(\mathcal{H}) \coloneq \bigotimes_{i=1}^n \mathcal C(\mathcal H_i) = \{\bigotimes_{i=1}^n \beta_i \,\mid\, \forall i\in\llbracket n \rrbracket,\, \beta_i \in \mathcal{C}(\mathcal{H}_i)\}.
+    \end{equation}
+    Obviously, $\mathcal P(\mathcal H) \subset \mathcal C(\mathcal H)$.
+\end{definition}
+
+\begin{proposition}[Basis-norm additivity] \label{prop:norm-additivity}
+    Given $\beta_1, \beta_2 \in \mathcal{C}(\mathcal{H}_1)$ and $\gamma_1, \gamma_2 \in \mathcal{C}(\mathcal{H}_2)$, we have
+    \begin{equation}
+        \|\beta_1 \otimes \gamma_1 - \beta_2 \otimes \gamma_2\|_B\leq \|\beta_1 - \beta_2\|_B+ \|\gamma_1 - \gamma_2\|_B.
+    \end{equation}
+\end{proposition}
+\begin{proof}
+    Let $n = \dim \mathcal H_1$ and $m = \dim \mathcal H_2$. We may write
+    \[ \beta_1 = \{|\varphi_i\rangle\}_{i=1}^n,\ \ \beta_2 = \{|\varphi_i'\rangle\}_{i=1}^n,\ \ \gamma_1 = \{|\eta_j\rangle\}_{j=1}^m,\ \ \gamma_2 = \{|\eta_j'\rangle\}_{j=1}^m\,.\]
+    Let $i\in \llbracket n\rrbracket$ and $j\in \llbracket m\rrbracket$ be integers such that
+    \[\|\beta_1 \otimes \gamma_1 - \beta_2\otimes \gamma_2\|_B= \|\varphi_i \otimes \eta_j - \varphi_i' \otimes \eta_j'\|_1.\]
+    Then
+    \begin{align}
+        \|\beta_1 \otimes \gamma_1 - \beta_2\otimes \gamma_2\|_B &= \|\varphi_i \otimes \eta_j - \varphi_i' \otimes \eta_j'\|_1 \\ 
+        &= \|\varphi_i \otimes \eta_j - \varphi_i' \otimes \eta_j + \varphi_i' \otimes \eta_j - \varphi_i' \otimes \eta_j' \|_1 \\
+        &\leq \|\varphi_i \otimes \eta_j - \varphi_i' \otimes \eta_j\|_1 + \|\varphi_i' \otimes \eta_j - \varphi_i' \otimes \eta_j' \|_1 &\text{(by Thm.~\ref{thm:triangle-ineq-1norm})} \\ 
+        &= \| (\varphi_i - \varphi_i')\otimes \eta_j\|_1 + \| \varphi_i' \otimes (\eta_j - \eta_j')\|_1 \\
+        &= \|\varphi_i - \varphi_i'\|_1 + \|\eta_j - \eta_j'\|_1 \label{eq:need-explanation}\\
+        &\leq \|\beta_1 - \beta_2\|_B+ \|\gamma_1 - \gamma_2\|_B. &\text{(by Def.~\ref{def:basis-norm})}
+    \end{align}
+    Note that Eq.~\eqref{eq:need-explanation} is obtained using Lemma~\ref{lemma:trace-to-inner}:
+    \begin{align}
+        \|(\varphi_i - \varphi_i') \otimes \eta_j\|_1 &= \| \varphi_i\otimes \eta_j - \varphi_i' \otimes \eta_j\|_1 \\
+        &= \textstyle 2\sqrt{1 - |(\langle \varphi_i|\langle \eta_j|)(|\varphi_i'\rangle|\eta_j\rangle)|^2} \\
+        &= \textstyle 2\sqrt{1 - |\langle \varphi_i|\varphi_i'\rangle\langle \eta_j|\eta_j\rangle|^2} \\
+        &= \textstyle 2\sqrt{1 - |\langle \varphi_i|\varphi_i'\rangle|^2} \\
+        &= \|\varphi_i - \varphi_i'\|_1
+    \end{align}
+    and similarly $\| \varphi_i' \otimes (\eta_j - \eta_j')\|_1 = \| \eta_j - \eta_j'\|_1$.
+\end{proof}
+
+\begin{definition}[Basis $\varepsilon$-net] \label{def:basis-epsnet}
+    Let $\mathcal{H} = \bigotimes_{i=1}^n \mathcal H_i$ be an $n$-partite Hilbert space. For $\varepsilon > 0$, if a set $\mathcal N \subseteq \mathcal P(\mathcal H)$ satisfies that for all $\beta \in \mathcal P(\mathcal H)$ there exists $\gamma \in \mathcal N$ such that $\|\beta - \gamma\|_B \le \varepsilon$, then we call $\mathcal N$ a \emph{basis $\bm \varepsilon$-net} on $\mathcal P(\mathcal H)$.
+\end{definition}
+
+\begin{proposition} \label{prop:basis-net-1q}
+    For $\varepsilon\in (0,1)$, there exists a basis $[(1+2\sqrt2)\sqrt{\varepsilon}]$-net $\mathcal{N}$ on $\mathcal{C}(\mathbb{C}^2)$ with $|\mathcal{N}|\leq (5/\varepsilon)^8$.
+\end{proposition}
+
+\begin{proof}
+    Lemma~\ref{lemma:haydenII4} states that there exists an $\varepsilon$-net $\mathcal{N}_s$ on $\mathbb{C}^2$ with $|\mathcal{N}_s|\leq (5/\varepsilon)^4$. Let 
+    \begin{equation} \label{eq:construction-of-N}
+        \mathcal{N} = \left\{ \left\{|\eta_1\rangle, \frac{(I - \eta_1)|\eta_2\rangle}{\sqrt{\langle \eta_2|(I - \eta_1)|\eta_2\rangle}} \right\}: |\eta_1\rangle, |\eta_2\rangle \in \mathcal{N}_s \text{ and } \langle\eta_2|(I - \eta_1)|\eta_2\rangle>0\right\}.
+    \end{equation}
+    Notice that
+    \[
+        \frac{(I - \eta_1)|\eta_2\rangle}{\sqrt{\langle \eta_2|(I - \eta_1)|\eta_2\rangle}}
+    \]
+    is the normalized projection of $|\eta_2\rangle$ onto the orthogonal complement of $|\eta_1\rangle\langle\eta_1|$. Hence, we verified that every element in $\mathcal N$ is an orthonormal basis, i.e., $\mathcal N \subseteq \mathcal C(\C^2)$.
+    
+    Let $\beta= \{|\varphi_1\rangle, |\varphi_2\rangle \} \in \mathcal{C}(\mathbb{C}^2)$ be arbitrary. By Def.~\ref{def:eps-net} there exist $|\eta_1\rangle , |\eta_2\rangle \in \mathcal{N}_s$ such that $\|\eta_1 -\varphi_1\|_1\le \varepsilon$ and $\|\eta_2 - \varphi_2\|_1 \leq \varepsilon$. Let
+    \begin{equation} \label{eq:def-of-eta-prime}
+        |\eta_2'\rangle = \frac{(I - \eta_1)|\eta_2\rangle}{\sqrt{\langle \eta_2|(I - \eta_1)|\eta_2\rangle}}
+    \end{equation}
+    and $\gamma = \{|\eta_1\rangle, |\eta_2'\rangle\} \in \mathcal N$. Def.~\ref{def:basis-norm} gives
+    \begin{equation}
+        \|\beta - \gamma\|_B = \max\{\|\varphi_1 - \eta_1\|_1,\, \|\varphi_2 - \eta_2'\|_1\}.
+    \end{equation}
+    We already have $\|\varphi_1 - \eta_1\|_1\le \varepsilon$. Observe that
+    \begin{align}
+        \|\eta_1 - \eta_2\|_1 &= \| (\eta_1- \varphi_1) - (\eta_2 - \varphi_2) + (\varphi_1-\varphi_2) \|_1 \label{eq:eta-dist-1}\\
+        &\ge \| \varphi_1 - \varphi_2\|_1 - \|(\eta_1- \varphi_1) - (\eta_2 - \varphi_2)\|_1 \\
+        &\ge \|\varphi_1 - \varphi_2\|_1 - (\|(\eta_1- \varphi_1)\|_1 + \|(\eta_2 - \varphi_2)\|_1) \\
+        &\ge \textstyle 2\sqrt{1-|\langle \varphi_1 | \varphi_2\rangle|^2} - 2\varepsilon & \text{(by Lemma~\ref{lemma:trace-to-inner})} \\
+        &= 2-2\varepsilon. \label{eq:eta-dist-2}
+    \end{align}
+    The following relations give an upper bound for $\| \varphi_2 - \eta_2'\|_1$:
+    \begin{align}
+        \|\varphi_2 - \eta_2' \|_1 &=  \| \varphi_2 - \eta_2 + \eta_2 - \eta_2' \|_1 \\
+        &\leq \| \varphi_2 - \eta_2 \| + \| \eta_2 - \eta_2' \|_1 \\
+        &\le \textstyle \varepsilon + 2 \sqrt{1 - | \langle \eta_2 | \eta_2'\rangle |^2} & \text{(by Lemma~\ref{lemma:trace-to-inner})}\\
+        &= \varepsilon + 2\sqrt{1 - \langle \eta_2 |(I-\eta_1)| \eta_2\rangle} & \text{(by Eq.~\eqref{eq:def-of-eta-prime})} \\
+        &= \varepsilon + 2\sqrt{1-\langle \eta_2|\eta_2\rangle + |\langle \eta_1|\eta_2\rangle|^2} \\
+        &= \varepsilon + 2|\langle \eta_1 | \eta_2 \rangle| & (\because \langle \eta_2|\eta_2\rangle = 1) \\
+        &= \varepsilon + 2 \sqrt{1 - (\| \eta_1 - \eta_2 \|_1/2)^2} & \text{(by Lemma~\ref{lemma:trace-to-inner})} \\
+        &\leq \varepsilon + 2 \sqrt{1 - (1 - \varepsilon)^2} & \text{(by Eq.~\eqref{eq:eta-dist-1}$-$\eqref{eq:eta-dist-2})}\\
+        &= \varepsilon + 2 \sqrt{2 \varepsilon - \varepsilon^2} \\
+        &\le \varepsilon + 2 \sqrt{2} \sqrt{\varepsilon} \\
+        &\leq ( 1 + 2 \sqrt{2})\sqrt\varepsilon & (\because \varepsilon<1)
+    \end{align}
+    Thus, $\|\beta - \gamma\|_B$ is bounded above by $\max\{\varepsilon, (1+2\sqrt2)\sqrt\varepsilon\} = (1+2\sqrt2)\sqrt\varepsilon$. By Def.~\ref{def:basis-epsnet}, $\mathcal N$ is indeed a basis $[(1+2\sqrt2)\sqrt\varepsilon]$-net over $\mathcal C(\C^2)$.
+
+    As for the cardinality bound, Eq.~\eqref{eq:construction-of-N} implies $\mathcal N \subseteq N_s \times N_s$. Thus, $|\mathcal N| \le |\mathcal N_s|^2 = (5/\varepsilon)^8$.
+\end{proof}
+
+\begin{tcolorbox}
+\begin{theorem} \label{thm:basis-net-thm}
+    For $n\in\N$ and $\varepsilon\in (0,(1+2\sqrt2)n)$, there exists a basis $\varepsilon$-net $\mathcal{N}$ for $\mathcal{P}((\mathbb{C}^2)^{\otimes n})$ with \[|\mathcal N| \le \left(\frac{5(1+2\sqrt2)^2n^2}{\varepsilon^2}\right)^{8n}.\]
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+    Let $\delta \in (0,1)$ such that
+    \begin{equation}
+    \delta = \frac{(\varepsilon/n)^2}{(1+2\sqrt2)^2} ~\iff~ (1+2\sqrt2)\sqrt \delta = \frac{\varepsilon}{n}.
+    \end{equation}
+    Prop.~\ref{prop:basis-net-1q} states that there exists a basis $(\varepsilon/n)$-net $\mathcal{M}$ on $\mathcal{C}(\mathbb{C}^2)$ with
+    \begin{equation}
+    |\mathcal M| \le \left(\frac 5\delta\right)^8 = \left(\frac{5(1 + 2\sqrt2)^2n^2}{\varepsilon^2}\right)^8.
+    \end{equation}
+    Set
+    \begin{equation} \label{eq:produce-space-basis-choice} \textstyle
+        \mathcal{N} = \big\{\bigotimes_{i=1}^n \gamma_i \,\mid\, \forall i \in \llbracket n\rrbracket,\, \gamma_i \in \mathcal{M} \big\} \subseteq \mathcal P((\C^2)^{\otimes n}).
+    \end{equation}
+    Let $\beta = \bigotimes_{i=1}^n \beta_i$ be an arbitrary basis in $\mathcal P((\mathbb C^2)^{\otimes n})$ and $\gamma_1$, $\dots$, $\gamma_n$ be in $\mathcal M$. We apply Prop.~\ref{prop:norm-additivity} repetitively and obtain the following relations:
+    \begin{align} \textstyle
+        \big\| \bigotimes_{i=1}^n \beta_i - \bigotimes_{i=1}^n \gamma_i\big\|_B \le \big\|\beta_1 - \gamma_1\big\|_B + \big\|\bigotimes_{i=2}^n \beta_i - \bigotimes_{i=2}^n \gamma_i\big\|_B &\le \dots \nonumber \\ &\le \textstyle \sum_{i=1}^n \| \beta_i - \gamma_i\|_B. \label{eq:8777888787}
+    \end{align}
+    Since every $\gamma_i$ is in the basis ($\varepsilon/n$)-net $\mathcal M$, we can choose $\gamma_i$ such that $\| \beta_i - \gamma_i\|_B \le \varepsilon/n$ for all $i$. Therefore, continuing from Eq.~\eqref{eq:8777888787}, we have
+    \begin{equation} \textstyle
+        \big\| \bigotimes_{i=1}^n \beta_i - \bigotimes_{i=1}^n \gamma_i\big\|_B \le \sum_{i=1}^n \| \beta_i - \gamma_i\|_B \le n\cdot \frac{\varepsilon}{n} = \varepsilon,
+    \end{equation}
+    which by Def.~\ref{def:basis-epsnet} shows that $\mathcal N$ is indeed a basis $\varepsilon$-net.
+    
+    As for the cardinality bound, Eq.~\eqref{eq:produce-space-basis-choice} implies that $|\mathcal N| = |\mathcal M|^n \le [5(1+2\sqrt2)^2n^2/\varepsilon^2]^{8n}$.
+\end{proof}
+
+\subsection{Entanglement in Multipartite Systems}
+Let $A$ and $B$ be quantum systems containing qubits $A_1$, $\dots$, $A_{N_A}$ and $B_1$, $\dots$, $B_{N_B}$, respectively, i.e., $\mathcal{H}_A = \bigotimes_{i=1}^{N_A} \mathcal H_{A_i}$ and $\mathcal{H}_B = \bigotimes_{j=1}^{N_B} \mathcal H_{B_j}$ with $\dim \mathcal H_{A_i} = \dim \mathcal H_{B_j} = 2$ for all $i\in\llbracket N_A\rrbracket$ and $j\in\llbracket N_B\rrbracket$. Let $d_A = \dim \mathcal H_A = 2^{N_A}$ and $d_B = \dim \mathcal H_B = 2^{N_B}$. Suppose that we are given states $|\Psi\rangle \in \mathcal{H}_A\otimes \mathcal{H}_B$, $|v\rangle \in \mathcal{H}_A$, and we perform the projective measurement on system $A$, associated with the measurement operator $|v\rangle\langle v|_A\otimes I_B$.
+
+\begin{definition}
+    The post-measurement state for the measurement operator $|v\rangle\langle v|_A \otimes I_B$ is given by
+    \begin{equation}
+        \frac{(|v\rangle\langle v|_A \otimes I_B)|\Psi\rangle}{\sqrt{\langle\Psi|(|v\rangle\langle v|_A \otimes I_B)|\Psi\rangle}},
+    \end{equation}
+    and the probability of obtaining such state is given by
+    \begin{equation} p_v(\Psi) \coloneq \langle\Psi|(|v\rangle\langle v|_A \otimes I_B)|\Psi\rangle. \end{equation}
+\end{definition}
+
+We can show that indeed $0\le p_v(\Psi) \le 1$: Suppose that $|i\rangle \in \mathcal C(\mathcal H_A)$ contains $|v\rangle$ and $|j\rangle \in \mathcal C(\mathcal H_B)$. Then
+\begin{align}
+    0 \le p_v(\Psi) &= \langle\Psi|(|v\rangle\langle v|_A \otimes I_B)|\Psi\rangle \\
+    &= \textstyle \sum_j \langle\Psi|(|v\rangle\langle v|_A \otimes |j\rangle\langle j|_B)|\Psi\rangle \\
+    &= \textstyle \sum_j |(\langle v|_A\langle j|_B)|\Psi\rangle|^2 \\
+    &\le \textstyle \sum_i \sum_j |\langle ij|\Psi\rangle|^2 \\
+    &= 1.
+\end{align}
+
+\begin{proposition}[Post-measurement disentanglement] \label{prop:post-disentangle} The following relation indicates that the post-measurement state will not be entangled:
+    \begin{equation} \label{eq:post-measure}
+        (|v\rangle\langle v|_A \otimes I_B)|\Psi\rangle = |v\rangle_A \otimes (\langle v|_A \otimes I_B)|\Psi\rangle.
+    \end{equation}
+\end{proposition}
+
+\begin{proof} The following relations will prove Eq.~\eqref{eq:post-measure}:
+    \begin{equation}
+        LHS = (|v\rangle_A\otimes I_B)(\langle v|_A\otimes I_B)|\Psi\rangle = (|v\rangle_A\otimes I_B)\big(1 \otimes ((\langle v|_A\otimes I_B)|\Psi\rangle)\big) = RHS
+    \end{equation}
+\end{proof}
+
+\begin{definition} \label{def:post-state}
+    The unnormalized post-measurement state with system $A$ discarded is given by
+    \begin{equation}
+        |P_v(\Psi)\rangle \coloneq (\langle v|_A \otimes I_B)|\Psi\rangle \in \mathcal H_B
+    \end{equation}
+    and the normalized one is given by
+    \begin{equation}
+        |M_v(\Psi)\rangle \coloneq \frac{|P_v(\Psi)\rangle}{\sqrt{p_v(\Psi)}} = \frac{(\langle v|_A \otimes I_B)|\Psi\rangle}{\sqrt{\langle\Psi|(|v\rangle\langle v|_A \otimes I_B)|\Psi\rangle}} \in \mathcal H_B.
+    \end{equation}
+    Note that $~0 \le \||P_v(\Psi)\rangle\|_2 \le 1$ because $\langle P_v(\Psi)|P_v(\Psi)\rangle = p_v(\Psi)$.
+\end{definition}
+
+\begin{definition}[Wootter's tilde] 
+    For an $n$-qubit state $|\psi\rangle \in (\C^2)^{\otimes n}$, we define
+    \begin{equation}
+        |\tilde \psi\rangle \coloneq \sigma_y^{\otimes n} |\psi^*\rangle.
+    \end{equation}
+\end{definition}
+
+\begin{proposition} \label{prop:wootter-saves} Wootter's tilde preserves length, i.e., $\| |\tilde \psi\rangle \|_2 = \| |\psi\rangle \|_2$.
+\end{proposition}
+
+\begin{proof}
+    Since $(\sigma_y^{\otimes n})^\dagger \sigma_y^{\otimes n} = I$, we have $\langle \tilde \psi|\tilde \psi\rangle = \langle\psi^*|\psi^*\rangle = \langle\psi|\psi\rangle$.
+\end{proof}
+
+\begin{definition}[$n$-tangle] \label{def:ntangle} The entanglement measurement \emph{$\bm n$-tangle} of an $n$-qubit state $|\psi\rangle \in (\C^2)^{\otimes n}$ is given by
+    \begin{equation} 
+        \tau_n(\psi) \coloneq |\langle \psi|\tilde\psi \rangle|.
+    \end{equation}
+\end{definition}
+
+\begin{proposition} \label{prop:ntangle-bound}
+    The $n$-tangle for any state is bounded above by $1$.
+\end{proposition}
+
+\begin{proof}
+    Trivial by Cauchy-Schwartz and Prop.~\ref{prop:wootter-saves}.
+\end{proof}
+
+\begin{definition}[Average $n$-tangle] \label{def:avg-ntangle-Avec} The \emph{average post-measurement $\bm n$-tangle} given $|v\rangle \in\mathcal H_A$ is defined as
+    \begin{equation}
+        F_v(\Psi) \coloneq p_v(\Psi) \tau(|M_v(\Psi)\rangle) = |\langle P_v(\Psi)|\widetilde P_v(\Psi)\rangle|
+    \end{equation}
+\end{definition}
+
+\begin{definition}[Average $n$-tangle over a basis] \label{def:tau-bar-beta}For an orthonormal basis $\beta = \{|\varphi_i\rangle\}_{i=1}^{d_A} \in \mathcal C(\mathcal H_A)$, we define
+    \begin{equation} \textstyle
+        \overline \tau_\beta(\Psi) \coloneq \sum_{i=1}^{d_A} F_{\varphi_i}(\Psi) = \sum_{i=1}^{d_A} p_{\varphi_i}(\Psi)\tau(|M_{\varphi_i}(\Psi)\rangle).
+    \end{equation}
+\end{definition}
+
+\begin{lemma} \label{lemma:F-v-Lipschitz}
+    For all states $|v\rangle, |w\rangle \in \mathcal{H}_A$, we have
+    \begin{equation}
+        \left| F_v(\Psi) - F_w(\Psi)\right| \leq \sqrt{2} d_B \left\||v\rangle\langle v| - |w\rangle\langle w|\right\|_1.
+    \end{equation}
+\end{lemma}
+\begin{proof} For all $|u\rangle \in \mathcal H_A$ and for all $\theta \in \R$, we have
+    \begin{equation} F_u(e^{i\theta}|\Psi\rangle) = \big|\langle P_u(e^{i\theta}|\Psi\rangle)|\widetilde P_u(e^{i\theta}|\Psi\rangle)\rangle\big| = \big|e^{-2i\theta} \langle P_u(\Psi)|\widetilde P_u(\Psi)\rangle\big| = F_u(\Psi).
+    \end{equation}
+Thus, we may assume
+\begin{equation} \label{eq:inner-assumption}
+    \langle v|w\rangle =|\langle v|w\rangle| \in [0,1]
+\end{equation}
+WLOG. Observe the following relations (for simplicity we omit $\Psi$):
+\begin{align}
+    \big| F_v - F_w\big|  &= \big||\langle P_v|\widetilde{P}_v\rangle| - |\langle P_w|\widetilde{P}_w\rangle|\big| &\text{(by Def.~\ref{def:avg-ntangle-Avec})} \\
+    &\le \big| \langle P_v| \widetilde{P}_v \rangle - \langle P_w|\widetilde{P}_w \rangle \big| \\
+    &= \big| \langle P_v| \widetilde{P}_v \rangle - \langle P_w  | \widetilde{P}_v \rangle + \langle P_w  | \widetilde{P}_v \rangle -\langle P_w|\widetilde{P}_w \rangle \big| \\
+    &= \big| (\langle P_v | - \langle P_w |)| \widetilde{P}_v  \rangle + \langle P_w | (|\widetilde{P}_v \rangle - |\widetilde{P}_w  \rangle) \big| \\
+    &\leq \big| (\langle P_v | - \langle P_w |)| \widetilde{P}_v  \rangle\big| + \big|\langle P_w | (|\widetilde{P}_v \rangle - |\widetilde{P}_w  \rangle) \big| \\
+    &\le \| |P_v\rangle - |P_w\rangle \|_2 \| |\widetilde P_v\rangle \|_2 + \| |P_w\rangle \|_2 \| |\widetilde P_v\rangle - |\widetilde P_w\rangle \|_2 \label{eq:i-am-here-cuz-cauchy} &\text{(by Cauchy-Schwartz)} \\
+    &= \| |P_v\rangle - |P_w\rangle \|_2 \| |P_v\rangle \|_2 + \| |P_w\rangle \|_2 \| | P_v \rangle - |P_w  \rangle \|_2. &\text{(by Prop.~\ref{prop:wootter-saves})} \\
+    &\le 2\||P_v\rangle - |P_w\rangle\|_2. &\text{(by Def.~\ref{def:post-state})} \label{eq:wait-for-bound}
+\end{align}
+Let $|\alpha\rangle = |v\rangle - |w\rangle$ and $|i\rangle \in \mathcal C(\mathcal H_B)$. We continue from Eq.~\eqref{eq:wait-for-bound}:
+\begin{align}
+    \big|F_v - F_w\big| \le 2\||P_v\rangle - |P_w\rangle\| &= 2\|(\langle\alpha| \otimes I_B)|\Psi\rangle\|_2 &\text{(by Def.~\ref{def:post-state})} \\
+    &= \textstyle 2\sqrt{\langle\Psi| (|\alpha\rangle\langle \alpha|_A \otimes I_B) |\Psi\rangle} \\
+    &= \textstyle 2\sqrt{\sum_{i=1}^{d_B} \langle\Psi|(|\alpha\rangle\langle \alpha|_A \otimes |i\rangle\langle i|_B)|\Psi\rangle} \\
+    &\le \textstyle 2\sum_{i=1}^{d_B} \sqrt{\langle\Psi|(|\alpha\rangle\langle \alpha|_A \otimes |i\rangle\langle i|_B)|\Psi\rangle} \\
+    &= \textstyle 2\sum_{i=1}^{d_B} \big|(\langle \alpha|_A\langle i|_B)|\Psi\rangle\big| \\
+    &\le \textstyle 2\sum_{i=1}^{d_B} \||\alpha\rangle_A|i\rangle_B\|_2 \cdot \||\Psi\rangle\|_2 &\text{(by Cauchy-Schwartz)} \\
+    &= \textstyle 2\sum_{i=1}^{d_B} \||\alpha\rangle\|_2 \cdot \||i\rangle\|_2 \cdot \||\Psi\rangle\|_2 \\
+    &= 2d_B\||\alpha\rangle\|_2. \\
+    &= 2d_B\||v\rangle -|w\rangle\|_2 \\
+    &= 2d_B\sqrt{(\langle v| - \langle w|)(|v\rangle - |w\rangle)} \\
+    &= 2d_B\sqrt{2 - 2\Re(\langle v|w\rangle)} \\
+    &= 2d_B\sqrt{2 - 2|\langle v|w\rangle|} &\text{(by Eq.~\eqref{eq:inner-assumption})} \\
+    &\le 2d_B\sqrt{2 - 2|\langle v|w\rangle|^2} &(\because |\langle v|w\rangle|\le 1) \\
+    &= \sqrt 2d_B\||v\rangle\langle v| - |w\rangle\langle w|\|_1. &\text{(by Lemma~\ref{lemma:trace-to-inner})}
+\end{align}
+\end{proof}
+
+\begin{lemma} \label{lemma:tau-bar-and-b-norm}
+    Given $\beta = \{|\varphi_i\rangle\}_{i=1}^{d_A},\, \gamma = \{|\eta_i\rangle\}_{i=1}^{d_A} \in  \mathcal C(\mathcal{H}_A)$, we have 
+    \begin{equation}
+        |\overline{\tau}_\beta(\Psi) - \overline{\tau}_{\gamma}(\Psi)| \leq \sqrt{2}d_Ad_B\|\beta - \gamma\|_B
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    \begin{align}
+        \textstyle \big|\overline{\tau}_\beta(\Psi) - \overline{\tau}_{\gamma}(\Psi)\big| &= \textstyle \big| \sum_{i = 1}^{d_A} F_{\varphi_i}(\Psi) - \sum_{i = 1}^{d_A} F_{\eta_i} (\Psi) \big| &\text{(by Def.~\ref{def:tau-bar-beta})} \\
+        &= \textstyle  \big| \sum_{i = 1}^{d_A} \big(F_{\varphi_i} (\Psi) - F_{\eta_i} (\Psi)\big) \big| \\
+        &\leq \textstyle \sum_{i = 1}^{d_A} \big| F_{\varphi_i} (\Psi) - F_{\eta_i}(\Psi) \big| \label{eq:abs-val-inside}\\
+        &\leq \textstyle  \sqrt{2} d_B \sum_{i = 1}^{d_A} \| \varphi_i - \eta_i \|_1 &\text{(by Lemma~\ref{lemma:F-v-Lipschitz})} \\
+        &\leq \textstyle \sqrt{2} d_A d_B \| \beta - \gamma \|_B. &\text{(by Def.~\ref{def:basis-norm})}
+    \end{align}
+\end{proof}
+
+\section{Results}
+\begin{tcolorbox}
+\begin{definition}[LME] \label{def:lme} Given a state $|\Psi\rangle \in \mathcal H_A\otimes \mathcal H_B$, the \emph{localizable multipartite entanglement (LME)} of $|\Psi\rangle$ with respect to the entanglement measurement $\tau$ (as in Def.\,\ref{def:ntangle}) is defined as the maximum average post-measurement $n$-tangle, given by
+\begin{equation} \label{eq:lme}
+    L^\tau(\Psi) \coloneq \max_{\beta \in \mathcal P(\mathcal H_A)}\overline\tau_\beta(\Psi),
+\end{equation}
+as stated in \cite{Vairogs2024}. Also, we denote by $\beta_{\max} \in \mathcal P(\mathcal H_A)$ a basis such that $\overline\tau_{\beta_{\max}}(\Psi) = L^\tau(\Psi)$.
+\end{definition}
+\end{tcolorbox}
+
+According to \cite{Vairogs2024}, its counterpart \emph{multipartite entanglement assistance} is defined as
+\begin{equation} \label{eq:mea}
+    L^\tau_{\text{global}}(\Psi) \coloneq \max_{\beta \in \mathcal C(\mathcal H_A)} \overline\tau_\beta (\Psi).
+\end{equation}
+Notice the difference in the range of $\beta$ between Eq.~\eqref{eq:lme} and Eq.~\eqref{eq:mea}.
+
+\begin{lemma} \label{lemma:chris06}
+    For all states $|\psi\rangle, |\psi'\rangle \in \mathcal H_B$, by \parencite[Lem.\,6]{Vairogs2024} we have
+    \begin{equation}
+        |\tau_{N_B}(|\psi\rangle) - \tau_{N_B}(|\psi'\rangle)| \leq \sqrt{2} \| \psi - \psi'\|_1. 
+    \end{equation}
+\end{lemma}
+
+Suppose that a concave, increasing $f:[0,\infty) \to [0, \infty)$ satisfies
+\begin{equation} \label{eq:f-cond-i}
+    \big|\tau(|\psi\rangle) - \tau(|\psi'\rangle)\big| \le f(\| \psi - \psi'\|_1)
+\end{equation}
+and
+\begin{equation} \label{eq:f-cond-ii}
+    \tau(|\psi\rangle) \le f(\|\psi\|_1).
+\end{equation}
+for all states $|\psi\rangle, |\psi'\rangle \in \mathcal H_B$.
+
+\begin{lemma} \label{lemma:chris16}
+    Given $\beta \in \mathcal C(\mathcal H_A)$, for all states $|\Psi\rangle, |\Psi'\rangle \in \mathcal H_A \otimes \mathcal H_B$, by \parencite[Lem.\,16]{Vairogs2024} we have
+    \begin{equation}
+        |\overline{\tau}_{\beta} (|\Psi\rangle) -\overline{\tau}_{\beta}(|\Psi'\rangle)| \leq f(2 \| \Psi - \Psi' \|_1) + \| \Psi - \Psi' \|_1.
+    \end{equation}
+\end{lemma}
+
+\begin{corollary} \label{cor:f-sqrt2x} For $\beta \in \mathcal C(\mathcal H_A)$ and states $|\Psi\rangle, |\Psi'\rangle \in \mathcal H_A \otimes \mathcal H_B$, we have
+    \begin{equation}
+        |\overline{\tau}_{\beta} (|\Psi\rangle) -\overline{\tau}_{\beta}(|\Psi'\rangle)| \le (1+2\sqrt2)\| \Psi - \Psi' \|_1
+    \end{equation}
+\end{corollary}
+
+\begin{proof}
+    Choose $f:[0,\infty) \to [0,\infty)$ defined by $f(x) = \sqrt2 x$. Obviously, it is concave and monotone. By Lemma~\ref{lemma:chris06}, the condition as in Eq.~\eqref{eq:f-cond-i} is satisfied. Also, Prop.~\ref{prop:ntangle-bound} implies
+    \begin{equation}
+        \tau(|\psi\rangle) \le 1 < f(\|\psi\|_1) = \sqrt 2\|\psi\|_1 \le \sqrt2,
+    \end{equation}
+    so Eq.~\eqref{eq:f-cond-ii} holds. Finally, Lemma~\ref{lemma:chris16} finishes the proof.
+\end{proof}
+
+\begin{comment}
+\begin{theorem}[Thm.~5 \cite{Vairogs2024}]
+    For all states $|\Psi\rangle, |\Psi'\rangle \in \mathcal H_A \otimes \mathcal H_B$, we have
+    \begin{equation}
+        |L^\tau(|\Psi\rangle) - L^\tau(|\Psi'\rangle)| \le f(2\|\Psi - \Psi'\|_1) + \|\Psi - \Psi'\|_1.
+    \end{equation}
+\end{theorem}
+
+\begin{corollary}[Cor.~7 \cite{Vairogs2024}]
+    For all states $|\Psi\rangle, |\Psi'\rangle \in \mathcal H_A\otimes \mathcal H_B$, we have
+    \begin{equation}
+        |L^\tau(|\Psi\rangle) - L^\tau(|\Psi'\rangle)| \le (1+2\sqrt2)\|\Psi - \Psi'\|_1.
+    \end{equation}
+\end{corollary}
+\end{comment}
+
+\begin{lemma} \label{lemma:e-le-K} For all $\beta \in \mathcal C(\mathcal H_A)$, by \parencite[Lem.\,22]{Vairogs2024} we have
+    \begin{align}
+        \E_{| \Psi \rangle \sim \Haar(d_Ad_B)} [\overline{\tau}_{\beta} (\Psi)] \le \sqrt{\frac2{d_B + 1}}.
+    \end{align}
+\end{lemma}
+
+\begin{definition}
+    For convenience let us define
+    \begin{equation}
+        K(d_B) \coloneq \sqrt{\frac2{d_B + 1}}.
+    \end{equation}
+\end{definition}
+
+\begin{lemma}[Levy's Lemma \cite{Mele2024}] \label{lemma:levy}
+    Consider $\mathbb S^{2d-1} \coloneq \{|\Phi\rangle \in \C^d: \||\Phi\rangle\|_2 = 1\}$. Let $f:\mathbb S^{2d-1} \to \R$ be a function satisfying the Lipschitz condition
+    \[ \exists L \ge 0 ~s.t.~ \forall |\Phi\rangle, |\Phi'\rangle \in \mathbb S^{2d-1},\, |f(\Phi) - f(\Phi')| \le L\||\Phi\rangle-|\Phi'\rangle\|_2
+    \]
+    —\,we call such $f$ Lipschitz continuous and such $L$ the Lipschitz constant. Then for all $\varepsilon > 0$, we have the probability bound
+    \begin{equation}
+        \Pr_{|\Phi\rangle \sim \Haar(d)} \left(\left|f(\Phi) - \E_{|\Phi'\rangle \sim \Haar(d)}[f(\Phi')]\right| \ge \varepsilon\right) \le 2\exp\left(-\frac{2d\varepsilon^2}{9\pi^3L^2}\right).
+    \end{equation}
+\end{lemma}
+
+\begin{tcolorbox}
+\begin{lemma}\label{lemma:neighbor-bound}
+    Given a fixed $\gamma \in \mathcal P(\mathcal H_A)$, for all $\varepsilon, \delta > 0$ such that $\varepsilon - \sqrt2 d_A d_B \delta > 0$, we have
+    \begin{align} \label{eq:lemma-11-main}
+        \Pr_{|\Psi\rangle \sim \Haar(d_Ad_B)} \Big(\overline\tau_{\beta_{\max}}(\Psi) \geq K(d_B) + \varepsilon ~\text{ and }~ \|\beta_{\max} - \gamma\|_B \leq \delta \Big) \nonumber \\
+        \leq 2\exp\left(- \frac{2d_Ad_B(\varepsilon - \sqrt{2}d_Ad_B\delta)^2}{9\pi^3 (4\sqrt{2}+2)^2}\right)
+    \end{align}
+\end{lemma}
+\end{tcolorbox}
+
+\begin{proof} Let us claim that
+    \[
+        \overline\tau_{\beta_{\max}}(\Psi) \geq K(d_B) + \varepsilon ~\text{ and }~ \|\beta_{\max} - \gamma\|_B \leq \delta ~\implies~ \overline \tau_\gamma(\Psi) \ge K(d_B) + \varepsilon - \sqrt{2}d_Ad_B\delta.
+    \]
+    Proof:
+    \begin{align}
+        \overline{\tau}_{\gamma} (\Psi) &= \overline{\tau}_{\beta_{\max}}(\Psi) - (\overline{\tau}_{\beta_{\max}}(\Psi) - \overline{\tau}_{\gamma}(\Psi)) \label{eq:tau-gamma-bond-1} \\
+        &\geq \overline{\tau}_{\beta_{\max}}(\Psi)- | \overline{\tau}_{\beta_{\max}}(\Psi) - \overline{\tau}_{\gamma}(\Psi) | \\
+        &\ge \overline{\tau}_{\beta_{\max}}(\Psi) - \sqrt{2}d_Ad_B \| \beta_{\max} - \gamma \|_B  &\text{(by Lemma~\ref{lemma:tau-bar-and-b-norm})} \\
+        &\ge K(d_B) + \varepsilon - \sqrt{2}d_Ad_B\delta. \label{eq:tau-gamma-bond-2}
+    \end{align}
+    Hence, \newcommand{\hSKIP}{\text{\hspace*{-15pt}}}
+    \begin{align}
+        \Pr_{|\Psi\rangle \sim \Haar(d_Ad_B)} &\Big(\overline\tau_{\beta_{\max}}(\Psi) \geq K(d_B) + \varepsilon ~\text{ and }~ \|\beta_{\max} - \gamma\|_B \leq \delta \Big) \\
+        &\hSKIP\le \Pr_{|\Psi\rangle \sim \Haar} \Big(\overline{\tau}_{\gamma}(\Psi)\geq K(d_B) + \varepsilon - \sqrt{2}d_Ad_B\delta \Big) &\text{(by Eq.~\eqref{eq:tau-gamma-bond-1}$-$\eqref{eq:tau-gamma-bond-2})} \\
+        &\hSKIP\leq \Pr_{|\Psi\rangle \sim \Haar} \left( \overline{\tau}_{\gamma}(\Psi) \geq \E_{|\Phi\rangle \sim \Haar}[\overline{\tau}_{\gamma}(\Phi)] + \varepsilon - \sqrt{2}d_Ad_B\delta \right) &\text{(by Lemma~\ref{lemma:e-le-K})} \\
+        &\hSKIP= \Pr_{|\Psi\rangle \sim \Haar} \left( \overline{\tau}_{\gamma}(\Psi) - \E_{|\Phi\rangle \sim \Haar}[\overline{\tau}_{\gamma}(\Phi)] \ge \varepsilon - \sqrt{2}d_Ad_B\delta \right) \\
+        &\hSKIP\leq \Pr_{|\Psi\rangle \sim \Haar} \left( \left|\overline{\tau}_{\gamma}(\Psi) - \E_{|\Phi\rangle \sim \Haar}[\overline{\tau}_{\gamma}(\Phi)]\right| \ge \varepsilon - \sqrt{2}d_Ad_B\delta \right). \label{eq:levys-lemma}
+    \end{align}
+ 
+    With Cor.~\ref{cor:f-sqrt2x} and Cor.~\ref{cor:trace-hilbert-link}, for all states $|\Psi\rangle, |\Psi'\rangle \in \mathcal H_A \otimes \mathcal H_B$, we have
+    \begin{align}
+        | \overline{\tau}_{\gamma}(|\Psi\rangle) - \overline{\tau}_{\gamma}(|\Psi' \rangle ) | \leq (1+2\sqrt2) \|\Psi - \Psi'\|_1 \leq (2 + 4\sqrt2) \|\Psi - \Psi'\|_2.
+    \end{align}
+    Therefore, we verified that the function $\overline \tau_\gamma(\,\cdot\,)$ is Lipschitz continuous with Lipschitz constant $L = 2+4\sqrt2$, and hence from Eq.~\eqref{eq:levys-lemma}, we may use Lemma~\ref{lemma:levy} to finish the proof.
+\end{proof}
+
+Finally, we can turn to our main theorem.
+
+\begin{tcolorbox}
+\begin{theorem}\label{thm:main-thm}
+    For $0 < \varepsilon < (2\sqrt2 + 8)N_Ad_Ad_B$, we have
+    \begin{align}
+        \Pr_{|\Psi\rangle \sim \Haar(d_Ad_B)} &\big(L^\tau(\Psi) \geq K(d_B) + \varepsilon \big) \nonumber \\ 
+        &\leq 2\left(\frac{40(1+2\sqrt2)^2N_A^2d_A^2d_B^2}{\varepsilon^2}\right)^{8N_A} \exp\left(-\frac{d_Ad_B\varepsilon^2}{18\pi^3(2+4\sqrt2)^2}\right) \label{eq:main-thm-eq}
+    \end{align}
+\end{theorem}
+\end{tcolorbox}
+
+\begin{proof}
+    By Thm.~\ref{thm:basis-net-thm}, there exists a basis $(\varepsilon/2\sqrt2d_Ad_B)$-net $\mathcal N = \{\gamma_i\}_{i=1}^{N}$ on $\mathcal P(\mathcal H_A)$ with
+    \begin{equation} \label{eq:ncard-bond}
+        |\mathcal N| \le \left(\frac{5(1+2\sqrt2)^2N_A^2}{(\varepsilon/2\sqrt2d_Ad_B)^2}\right)^{8N_A} = \left(\frac{40(1+2\sqrt2)^2N_A^2d_A^2d_B^2}{\varepsilon^2}\right)^{8N_A}.
+    \end{equation}
+    Then by Def.~\ref{def:basis-epsnet} there must be $i\in \llbracket |\mathcal N|\rrbracket$ such that $\|\beta_{\max} - \gamma_i\|_B \le \varepsilon/2\sqrt2d_Ad_B$, which suggests
+    \begin{equation} \label{eq:smth-must-happen}
+        \Pr_{|\Psi\rangle \sim \Haar(d_Ad_B)} \left(\bigvee_{i=1}^{|\mathcal N|}\nolimits \|\beta_{\max} - \gamma_i\|_B \le \frac{\varepsilon}{2\sqrt2 d_Ad_B}\right) = 1.
+    \end{equation}
+    Hence,
+    \begin{align}
+        &\text{\hspace*{-2.2em}}\Pr_{|\Psi\rangle \sim \Haar(d_Ad_B)} \big(L^\tau(\Psi) \geq K(d_B) + \varepsilon \big) \nonumber \\
+        = ~&\Pr_{|\Psi\rangle \sim \Haar} \big(\overline\tau_{\beta_{\max}}(\Psi) \geq K(d_B) + \varepsilon \big) &\text{(by Def.~\ref{def:lme})} \\
+        = ~&\Pr_{|\Psi\rangle \sim \Haar} \left(\overline\tau_{\beta_{\max}}(\Psi) \ge K(d_B) + \varepsilon ~\wedge~ \left(\bigvee_{i=1}^{|\mathcal N|}\nolimits \|\beta_{\max} - \gamma_i\|_B \le \frac{\varepsilon}{2\sqrt2 d_Ad_B}\right)\right) &\text{(by Eq.~\eqref{eq:smth-must-happen})} \\
+        = ~&\Pr_{|\Psi\rangle \sim \Haar} \left(\bigcup_{i=1}^{|\mathcal N|} \nolimits \left\{\overline\tau_{\beta_{\max}}(\Psi) \ge K(d_B) + \varepsilon ~\wedge~ \|\beta_{\max} - \gamma_i\|_B \le \frac{\varepsilon}{2\sqrt2 d_Ad_B}\right\}\right) \\
+        \le ~&\sum_{i=1}^{|\mathcal N|} \Pr_{|\Psi\rangle \sim \Haar}\left(\overline\tau_{\beta_{\max}}(\Psi) \ge K(d_B) + \varepsilon ~\wedge~ \|\beta_{\max} - \gamma_i\|_B \le \frac{\varepsilon}{2\sqrt2 d_Ad_B}\right) \\
+        \le ~&|\mathcal N| \cdot 2\exp\left(-\frac{d_Ad_B\varepsilon^2}{18\pi^3(2+4\sqrt2)^2}\right) &\text{(by Lemma~\ref{lemma:neighbor-bound})} \\
+        \le ~&2\left(\frac{40(1+2\sqrt2)^2N_A^2d_A^2d_B^2}{\varepsilon^2}\right)^{8N_A}\exp\left(-\frac{d_Ad_B\varepsilon^2}{18\pi^3(2+4\sqrt2)^2}\right). &\text{(by Eq.~\eqref{eq:ncard-bond})}
+    \end{align}
+\end{proof}
+
+We also highlight the following corollary.
+
+\begin{tcolorbox}
+\begin{corollary}\label{cor:local-concentration}
+    Let $\varepsilon, \delta>0$ be arbitrary. Then for any $d_B\geq 2$, there exists an $N_0 \in \mathbb{N}$ such that for all $d_A \geq 2^{N_0}$, we have 
+    \begin{align}
+        \Pr_{|\Psi\rangle \sim \Haar(d_Ad_B)} \big(L^\tau(|\Psi\rangle)\geq K(d_B) + \varepsilon\big) \leq \delta.
+    \end{align}
+    Likewise, for any $d_A \geq 2$, there exists an $N_0' \in \mathbb{N}$ such that for all $d_B \geq 2^{N_0'}$, the above bound holds.
+\end{corollary}
+\end{tcolorbox}
+
+\begin{proof}[Explanation]
+    In $RHS$ of Eq.~\eqref{eq:main-thm-eq}, the last term $\exp[-d_Ad_B\varepsilon^2/18\pi^3(2+4\sqrt2)^2]$, which is decreasing with respect to both $d_A$ and $d_B$, dominates asymptotically. Therefore, for a fixed $d_B$ we can always choose $d_A$ that is large enough for $RHS$ of Eq.~\eqref{eq:main-thm-eq} to fall below $\delta$, and vice versa. \noqed
+\end{proof}
+
+\printbibliography[heading=bibnumbered]
+
+\end{document}

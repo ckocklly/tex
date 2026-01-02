@@ -1,0 +1,214 @@
+% --- Include Packages ---
+\usepackage{graphicx}   % Images
+\usepackage{amsfonts,   % Math
+    amsmath,
+    amssymb,
+    bm,
+    cases,
+    environ,
+    mathtools,
+    stmaryrd}
+\usepackage{array,      % Array
+    booktabs,
+    longtable}
+\usepackage{tabularx} 
+\usepackage{enumitem}   % List
+\usepackage{setspace}   % Line width
+\usepackage{multicol}	% Multiple table columns
+\usepackage{comment}	% Comment out sections
+\usepackage[svgnames,dvipsnames,table]{xcolor}
+\usepackage{colortbl}   % Colored sections
+\usepackage[font=small, labelfont=bf]{caption} % Caption
+\usepackage{tikz, tikz-qtree} % Draw diagram
+    \usetikzlibrary{arrows, automata, shapes}
+% \usepackage{sectsty}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+\usepackage{cleveref} % \cref{fig:hello} -> Figure~1
+\RequirePackage{calc}
+
+
+% --- Style ---
+% \renewcommand{\subsectionsize}{\large \textcolor{\SectionCol}}
+% \setlength{\parskip}{\baselineskip}
+\setlength{\parindent}{2em}
+\setstretch{1.15}
+
+% \allsectionsfont{\usefont{OT1}{phv}{b}{n}\selectfont\centering} % Set headings to Helvetica bold
+\setlength{\columnseprule}{0pt} % Remove ruler between columns in multicol
+\renewcommand{\emph}[1]{\textbf{\textit{\color{purple!65!black}{#1}}}}
+\setlist{topsep=5pt,
+    partopsep=0pt,
+    parsep=0pt, 
+    itemsep=5pt,
+    leftmargin=2em,
+    labelsep=.5em
+}
+\setlist[itemize]{label=$\bullet$}
+\newcommand{\bminline}[1]{\(\bm{#1}\)}
+\newcommand{\bmdisplay}[1]{\[\bm{#1}\]}
+\NewEnviron{bmequation}{%
+    \begin{equation}
+        \bm{\BODY}
+    \end{equation}
+}
+\NewEnviron{bmequation*}{%
+    \begin{equation*}
+        \bm{\BODY}
+    \end{equation*}
+}
+\setlength{\abovedisplayskip}{15pt}
+\setlength{\belowdisplayskip}{15pt}
+\setlength{\abovedisplayshortskip}{15pt}
+\setlength{\belowdisplayshortskip}{15pt}
+\DeclareMathSizes{25}{28}{22}{18}
+
+
+% --- Custom Colors ---
+\hypersetup{ 
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\definecolor{BoxCol}{gray}{0.85}
+\definecolor{SectionCol}{gray}{0}
+
+
+% --- Theorems ---
+\usepackage{amsthm}
+\usepackage{thmtools}
+\usepackage[framemethod=TikZ]{mdframed}
+\usetikzlibrary{shadows}
+% https://tex.stackexchange.com/a/292090/76888
+% https://github.com/marcodaniel/mdframed/issues/12
+\usepackage{xpatch}
+\xpatchcmd{\endmdframed}
+    {\aftergroup\endmdf@trivlist\color@endgroup}
+    {\endmdf@trivlist\color@endgroup\@doendpe}
+    {}{}
+\mdfdefinestyle{mdbluebox}{
+    roundcorner=15pt,
+    linewidth=4pt,
+    skipabove=.2\baselineskip,
+    skipbelow=.2\baselineskip,
+    frametitleaboveskip=0pt,
+    frametitlebelowskip=0pt,
+    frametitlefont=\bfseries,
+    innertopmargin=1.5ex,
+    innerbottommargin=1.5ex,
+    innerleftmargin=1.5ex,
+    innerrightmargin=1.5ex,
+    nobreak=true,
+    backgroundcolor=cyan!5,
+    linecolor=NavyBlue,
+}
+\declaretheoremstyle[
+    headfont=\bfseries\color{NavyBlue!50!black},
+    mdframed={style=mdbluebox},
+    headpunct={.~~},
+    postheadspace={0pt}
+]{thmbluebox}
+\mdfdefinestyle{mdredbox}{
+    roundcorner=15pt,
+    linewidth=4pt,
+    skipabove=1.5ex,
+    skipbelow=0pt,
+    frametitleaboveskip=5pt,
+    frametitlebelowskip=0pt,
+    frametitlefont=\bfseries,
+    innertopmargin=2ex,
+    innerbottommargin=1.5ex,
+    innerleftmargin=1.5ex,
+    innerrightmargin=1.5ex,
+    nobreak=true,
+    backgroundcolor=magenta!4,
+    linecolor=BrickRed,
+}
+\declaretheoremstyle[
+    headfont=\bfseries\color{BrickRed},
+    mdframed={style=mdredbox},
+    headpunct={.~~},
+    postheadspace={0pt},
+]{thmredbox}
+\declaretheoremstyle[
+    headfont=\color{blue!40!black}\normalfont\bfseries,
+    spaceabove=1.2\baselineskip,
+    spacebelow=1.2\baselineskip,
+    headpunct={.~~},
+    bodyfont=\normalfont
+]{basehead}
+\newcommand{\listhack}{$\empty$\vspace{-2em}}
+\theoremstyle{definition}
+\declaretheorem[style=thmbluebox,name=Theorem]{theorem}
+\declaretheorem[style=thmbluebox,name=Lemma,sibling=theorem]{lemma}
+\declaretheorem[style=thmbluebox,name=Proposition,sibling=theorem]{proposition}
+\declaretheorem[style=thmbluebox,name=Corollary,sibling=theorem]{corollary}
+\declaretheorem[style=thmbluebox,name=Assumption,sibling=theorem]{assume}
+\declaretheorem[style=thmbluebox,name=Theorem,numbered=no]{theorem*}
+\declaretheorem[style=thmbluebox,name=Lemma,numbered=no]{lemma*}
+\declaretheorem[style=thmbluebox,name=Proposition,numbered=no]{proposition*}
+\declaretheorem[style=thmbluebox,name=Corollary,numbered=no]{corollary*}
+\declaretheorem[style=thmbluebox,name=Assumption,numbered=no]{assume*}
+\declaretheorem[style=basehead,name=Example,sibling=theorem]{example}
+\declaretheorem[style=basehead,name=Example,numbered=no]{example*}
+\declaretheorem[style=basehead,name=Definition,sibling=theorem]{definition}\declaretheorem[style=basehead,name=Definition,numbered=no]{definition*}
+\declaretheorem[style=basehead,name=Conjecture,sibling=theorem]{conjecture}
+\declaretheorem[style=basehead,name=Conjecture,numbered=no]{conjecture*}
+
+
+% --- Bibliography ---
+\usepackage[backend=biber,
+    sorting=none,
+    citestyle=numeric-comp,
+    giveninits=true,
+    style=numeric,
+    doi=false,
+    isbn=false,
+    url=false,
+    maxbibnames=6,
+    maxcitenames=2]{biblatex}
+\renewbibmacro{in:}{}
+\AtEveryBibitem{
+    \clearfield{eprint}
+    \clearfield{eprinttype}
+    \clearfield{eprintclass}}
+\DeclareFieldFormat{labelalpha}{\textbf{\small #1}} % citation ID's in small-bold
+\DefineBibliographyStrings{english}{%
+backrefpage  = {cited p.}, % for single page number
+backrefpages = {cited pp.} % for multiple page numbers
+}
+\DeclareFieldFormat{journaltitle}{\textit{#1},} % italic journal title with comma
+\DeclareFieldFormat[inbook,thesis]{title}{\textit{#1}\addperiod} % italic title with period
+\DeclareFieldFormat[article]{title}{#1} % title of journal article is printed as normal text
+\DeclareFieldFormat[article]{volume}{\textbf{#1}\addcolon\space} % bold volume numbers
+% Separate ISBN-13 field
+\DeclareFieldFormat[misc]{title}{\textit{#1}\addperiod}
+\DeclareSourcemap{\maps[datatype=bibtex]{\map{\step[fieldsource=ISBN-13,fieldtarget=ISBN]}}}
+% Drop trailing punctuation in bibliography names
+% \renewcommand{\finentrypunct}{}
+
+
+% --- Math ---
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\let\Im\relax
+\let\Re\relax
+\DeclareMathOperator{\Im}{Im}
+\DeclareMathOperator{\Re}{Re}
+\renewcommand{\tilde}[1]{\widetilde{\smash{{#1}}}}
+\newcommand{\noqed}{\renewcommand{\qedsymbol}{}}
+
+\DeclareMathOperator*{\prob}{Prob}
+\DeclareMathOperator*{\E}{\mathbb E}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\Haar}{Haar}

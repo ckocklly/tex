@@ -1,0 +1,224 @@
+\documentclass[landscape]{sciposter}
+\usepackage{myposter}
+\usepackage{lipsum}
+\renewcommand{\papertype}{custom}
+\renewcommand{\setpspagesize}{\special{papersize=36in, 24in}}
+
+% --- Font ---
+\usepackage{fontspec}
+\setmainfont{Helvetica Neue}
+\renewcommand{\fontpointsize}{25pt}
+\makeatletter
+\renewcommand\normalsize{\@setfontsize\normalsize{25pt}{32pt}}
+\renewcommand\small{\@setfontsize\small{21pt}{26pt}}
+\renewcommand\footnotesize{\@setfontsize\footnotesize{19pt}{23pt}}
+\renewcommand\scriptsize{\@setfontsize\scriptsize{17pt}{21pt}}
+\renewcommand\tiny{\@setfontsize\tiny{15pt}{18pt}}
+\renewcommand\large{\@setfontsize\large{29pt}{35pt}}
+\renewcommand\Large{\@setfontsize\Large{33pt}{40pt}}
+\renewcommand\LARGE{\@setfontsize\LARGE{38pt}{46pt}}
+\renewcommand\huge{\@setfontsize\huge{43pt}{52pt}}
+\renewcommand\Huge{\@setfontsize\Huge{48pt}{58pt}}
+\normalsize
+\makeatother
+\renewcommand{\familydefault}{\rmdefault}
+\renewcommand{\sectionsize}{\LARGE}
+
+% --- Title ---
+\title{The Asymptotics of Localizing Entanglement}
+\author{
+    Leo L.-Y. Lee, Abigail Vaughan-Lee, Hanyang Sha, Akanksha Chablani, Christopher Vairogs, and Jacob Beckey}
+\institute{University of Illinois Urbana-Champaign}
+\conference{MAA MathFest 2025}
+
+% --- Bibliography ---
+\addbibresource{references.bib}
+
+% --- DOCUMENT ---
+\begin{document}
+\maketitle
+\vspace{-1cm}
+\begin{multicols}{3}
+
+\raggedcolumns
+
+\section*{Introduction} \vspace{.3\baselineskip} \normalsize
+
+\emph{Localization} is a protocol that involves measuring a state and discarding a subset of subsystems.
+
+\begin{comment}
+The following example clarifies the meaning of ``discarding:''
+
+\begin{example}
+    Given states $|\Psi\rangle_{AB} \in \mathcal H_A \otimes \mathcal H_B$ and $|v\rangle_A \in \mathcal H_A$, the post-measurement state via the projective measurement associated with operator $|v\rangle\langle v|_A\otimes I_B$ is disentangled:
+    \begin{equation}
+        (|v\rangle\langle v|_A \otimes I_B)|\Psi\rangle_{AB} = |v\rangle_A\otimes (\langle v|_A\otimes I_B)|\Psi\rangle_{AB}.
+    \end{equation}
+    We can therefore disregard the $|v\rangle_A$ of $RHS$ and solely focus on $(\langle v|_A\otimes I_B)|\Psi\rangle_{AB}$ (which is in $\mathcal H_B$).
+\end{example}
+\end{comment}
+
+\begin{definition}
+    The \emph{\bminline{n}-tangle} is the entanglement measurement \bminline{\tau:\ (\C^2)^{\otimes n} \to [0,1]} given by $\bm{\tau_n(|\psi\rangle) \ :=\ |\langle \psi|}\widetilde{\smash{\bm\psi}}\bm{\rangle|}$ where $|\widetilde{\smash{\bm\psi}}\rangle \bm{~:=~ \sigma_y^{\otimes n}|\psi^*\rangle}$.
+\end{definition}
+
+\begin{definition} \label{def:mea}
+    Suppose a von Neumann measurement \bminline{\Pi_A} on subsystem \bminline{A} of a state \bminline{|\Psi\rangle\in\mathcal H_A\otimes \mathcal H_B} produces an ensemble \bminline{\{(p_i, |\psi\rangle_i)\}_i} of states over subsystem \bminline{B}. The \emph{multipartite entanglement assistance (MEA)} of \bminline{|\Psi\rangle} with respect to \bminline{\tau} is defined as the maximal average post-measurement entanglement:
+    \begin{bmequation*} \textstyle
+        L^{\tau}_{\textbf{global}}(|\Psi\rangle) ~:=~ \max_{\Pi_A} \sum_i p_i\tau_{N_B}(|\psi_i\rangle).
+    \end{bmequation*}
+    In particular, if \bminline{\Pi_A} is \textit{local}\,—\,i.e., the operators assume a tensor product form with respect to the subsystems in \bminline{A}\,—\,then such \bminline{L^{\tau}_{\textbf{global}}} is alternatively called the \emph{localizable multipartite entanglement (LME)} and denoted by \bminline{L^{\tau}}.
+\end{definition}
+
+\begin{theorem} \label{thm:chris-thm8}
+    For a known \bminline{C>0}, we have
+    \begin{align*}
+        \bm{\Pr_{|\Psi\rangle \sim \Haar} \Big(L^\tau_{\textbf{global}}(|\Psi\rangle) \le 1 - \sqrt{2d_B/d_A} - \varepsilon\Big)}& \\ \bm{~\le~ 2\exp(-Cd_Ad_B\varepsilon^2)},&
+    \end{align*}
+    which shows that when \bminline{d_A \gg d_B \gg 1}, the quantity \bminline{L^\tau_{\textbf{global}}} is near maximal \parencite[Thm.~8]{Vairogs2024}.
+\end{theorem}
+
+We aim to obtain similar concentration results for \bminline{L^\tau} and study its asymptotic behavior. Preliminary numerical estimation (see Fig.~\ref{fig:ltau-est}) suggests our hypothesis as follows.
+
+\begin{conjecture} For some function \bminline{K} of \bminline{d_A} and \bminline{d_B}, we have
+    \[
+    \scalebox{0.95}{$\displaystyle \bm{\Pr_{|\Psi\rangle \sim \Haar} \big(L^\tau(|\Psi\rangle) \ge K(d_A, d_B) \,+\, \varepsilon\big) ~\le~ 2\exp(-Cd_Ad_B\varepsilon^2)}$}
+    \]
+with \bminline{\displaystyle \lim_{d_B \to \infty} K(d_A, d_B) ~=~ 0}.
+\end{conjecture}
+
+The above holds when \bminline{\displaystyle K ~=~ \E_{|\Psi\rangle \sim \Haar}[L^\tau(|\Psi\rangle)]} \cite{Vairogs2024}. Yet, the explicit form of \bminline{K} is unknown.
+
+\vspace{\baselineskip}
+
+\begin{minipage}{\linewidth} \centering
+    \begin{minipage}{.4\linewidth}
+        \setlength{\arrayrulewidth}{2pt}
+        \renewcommand{\arraystretch}{1.1}
+        \small
+        \begin{tabular}{|>{\hspace{3pt}}c<{\hspace{3pt}}|>{\hspace{3pt}\raggedright}p{10cm}<{\hspace{3pt}}|}
+            \hline
+            \textbf{Notation} & \textbf{Definition} \tabularnewline
+            \hline
+            \bminline{\mathcal H_A} & Hilbert space of subsystem \bminline{A} \tabularnewline
+            \hline
+            \bminline{N_A} & Number of qubits in \bminline{A} \tabularnewline
+            \hline
+            \bminline{d_A} & Dimension of \bminline{\mathcal H_A}. Equals \bminline{2^{N_A}} \tabularnewline
+            \hline
+            \bminline{\Haar} & Haar measure \tabularnewline
+            \hline
+            \bminline{\mathcal C(\mathcal H_{A_i})} & Collection of orthonormal bases in qubit \bminline{A_i} \tabularnewline
+            \hline
+            \bminline{\mathcal P(\mathcal H_A)} & Collection of orthonormal bases that have a tensor product form with respect to the subsystems in \bminline{A} \tabularnewline
+            \hline
+        \end{tabular}
+        \vspace*{-5pt}
+        \captionof{table}{Notations used in this poster}
+    \end{minipage} \qquad
+    \begin{minipage}{.5\linewidth}
+        \includegraphics[width=.97\linewidth]{Ltau-est-fitted.png}
+        \vspace*{-10pt}
+        \captionof{figure}{Exponential fitting of \bminline{\displaystyle \E_{|\Psi\rangle \sim \Haar}[L^\tau(|\Psi\rangle)]} for \bminline{N_A~=~1,2,3} as \bminline{N_B} increases} \label{fig:ltau-est}
+    \end{minipage}
+\end{minipage}
+
+\columnbreak
+
+\section*{Methods} \vspace{.3\baselineskip}
+
+Given a basis \bminline{\beta ~=~ \{|\varphi_i\rangle\}_i \in \mathcal P(\mathcal H_A)}, the set \bminline{\{|\varphi_i\rangle\langle \varphi_i| \otimes I_B\}_i} containing operators associated with a \bminline{\Pi_A}, and a state \bminline{|\Psi\rangle \!\in\! \mathcal H_A \otimes \mathcal H_B}, we denote by \bminline{\overline \tau_\beta(|\Psi\rangle)} the average \bminline{N_B}-tangle. We also denote \bminline{\beta_{\max} ~:=~ \argmax_\beta \overline \tau_\beta(|\Psi\rangle)}. Note that by Def.~\ref{def:mea}, \bminline{\overline \tau_{\beta_{\max}}(|\Psi\rangle) ~=~ L^\tau(|\Psi\rangle)}
+
+Recall that our goal is to bound \bminline{\displaystyle \Pr(L^\tau(|\Psi\rangle) \ge K(d_A,d_B) ~+~ \varepsilon)}. Lemma~22 of \cite{Vairogs2024} suggests that \bmdisplay{\textstyle K(d_A,d_B) ~=~ \sqrt{\frac{2}{d_B~+~1}}} is a decent choice as it is an upper bound of \bminline{\displaystyle \E[\overline\tau_\beta(|\Psi\rangle)]}. We can then prove the following using Levi's lemma \cite[Lem.~53]{Mele2024}.
+
+\vspace{.5\baselineskip}
+
+\begin{lemma} \label{lem:bound-w-cond}
+    Given a fixed basis \bminline{\gamma \in \mathcal P(\mathcal H_A)}, for all \bminline{\varepsilon, \delta > 0} such that \bminline{\varepsilon - \sqrt2d_Ad_B\delta > 0}, we have
+    \begin{align*}
+        \bm{\Pr_{|\Psi\rangle \sim \Haar}\Big(L^\tau(|\Psi\rangle) \ge \sqrt{2/(d_B + 1)} ~+~ \varepsilon \,\textbf{ and }\, \|\beta_{\max} - \gamma\|_B \le \delta\Big)}& \\ \bm{~\le~ 2\exp\big(-2d_Ad_B(\varepsilon - \sqrt2d_Ad_B\delta)^2/9\pi^3(2~+~4\sqrt2)^2\big)}.&
+    \end{align*}
+\end{lemma}
+
+Inspired by \parencite[Lem.~II.4]{Hayden_2004}, we define Defs.~\ref{def:basis-norm} and \ref{def:basis-eps-net}.
+
+\begin{definition}[Basis-norm] \label{def:basis-norm} For bases \bminline{\beta ~=~ \{|\varphi_i\rangle\}, \gamma ~=~ \{|\eta_i\rangle\}} in \bminline{\mathcal H_A},
+    \bmdisplay{\| \beta - \gamma\|_B ~:=~ \max_{i}\||\varphi_i\rangle\langle \varphi_i| - |\eta_i\rangle\langle \eta_i|\|_1.}
+\end{definition}
+
+\begin{definition}[Basis \bminline{\varepsilon}-net] \label{def:basis-eps-net}
+    For \bminline{\varepsilon > 0}, if a set \bminline{\mathcal N \subseteq \mathcal P(\mathcal H_A)} satisfies that for all \bminline{\beta \in \mathcal P(\mathcal H_A)} there exists \bminline{\gamma \in \mathcal N} such that \bminline{\| \beta - \gamma \|_B \le \varepsilon}, then we call \bminline{\mathcal N} a \emph{basis \bminline{\varepsilon}-net} on \bminline{\mathcal P(\mathcal H_A)}.
+\end{definition}
+
+\begin{theorem}
+    There exists a basis \bminline{\varepsilon}-net \bminline{\mathcal N} on \bminline{\mathcal P(\mathcal H_A)} with \bmdisplay{|\mathcal N| \le [5(1~+~2\sqrt2)^2N_A^2/\varepsilon^2]^{8N_A}.}
+\end{theorem}
+
+The above theorem allows us to find a set of bases such that \bminline{\beta_{\max}} is \textit{close to} at least one of them. Combining the result with Lem.~\ref{lem:bound-w-cond}, we finally arrive at the Thm.~\ref{thm:final-bound}.
+
+\vspace{.5\baselineskip}
+
+\begin{theorem} \label{thm:final-bound}
+    For \bminline{\varepsilon > 0},
+    \begin{align*}
+        \bm{\Pr_{|\Psi\rangle \sim \Haar}}& \bm{\Big(L^\tau(|\Psi\rangle) \ge \sqrt{2/(d_B + 1)} ~+~ \varepsilon\Big)} \\
+        &\text{\hspace*{-2cm}}\bm{\le 2\left(\frac{40(1+2\sqrt2)^2N_A^2d_A^2d_B^2}{\varepsilon^2}\right)^{8N_A} \exp\left(-\frac{d_Ad_B\varepsilon^2}{18\pi^3(2+4\sqrt2)^2}\right)}.
+    \end{align*}
+\end{theorem}
+
+\columnbreak
+
+\section*{Results} \vspace{.3\baselineskip}
+
+Observe the inequality displayed in Thm.~\ref{thm:final-bound}: Suppose \bminline{\varepsilon} is fixed. We can notice that for a fixed \bminline{d_A}, the right-hand side can be written as
+\bmdisplay{c_1d_B^{16N_A}\exp(\!-\!c_2d_B)} for some known positive reals \bminline{c_1} and \bminline{c_2}, which obviously tends to \bminline{0} as \bminline{d_B} approaches infinity. Likewise, we can discover that for a fixed \bminline{d_B}, the right-hand side vanishes as \bminline{d_A} approaches infinity. In conclusion, we may state the following.
+
+\vspace{.5\baselineskip}
+
+\begin{corollary} \label{cor:final-result}
+    Let \bminline{\varepsilon, \delta > 0} be arbitrary. Then for any \bminline{d_B\ge 2}, there exists an \bminline{N_0 \in \N} such that for all \bminline{d_A \ge 2^{N_0}}, we have
+    \bmdisplay{\Pr_{|\Psi\rangle \sim \Haar}\Big(L^\tau(|\Psi\rangle) \ge \sqrt{2/(d_B + 1)} ~+~ \varepsilon\Big) ~\le~ \delta.}
+    Likewise, for any \bminline{d_A \ge 2}, there exists an \bminline{N_0' \in \N} such that for all \bminline{d_B \ge 2^{N_0'}}, the above bound holds. 
+\end{corollary}
+
+\vspace{.6\baselineskip}
+
+\section*{Discussion} \vspace{.3\baselineskip}
+
+Theorem~\ref{thm:chris-thm8} and Cor.~\ref{cor:final-result} gives the following table.
+
+\vspace{.6\baselineskip}
+
+\begin{minipage}{\linewidth} \centering
+    \setlength{\arrayrulewidth}{2pt}
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{|>{\hspace{15pt}}c<{\hspace{15pt}}|>{\hspace{15pt}}c<{\hspace{15pt}}|>{\hspace{15pt}}c<{\hspace{15pt}}|}
+        \hline
+        & \bminline{d_A} fixed, \bminline{d_B \to \infty} & \bminline{d_A \to \infty}, \bminline{d_B} fixed \\
+        \hline
+        \bminline{L^\tau} & \bminline{< \sqrt{2/(d_B + 1)}} & \bminline{< \sqrt{2/(d_B + 1)}} \\
+        \hline
+        \bminline{L^\tau_{\textbf{global}}} & \textbf{\large\color{red}?} & \bminline{> 1 - \sqrt{2d_B/d_A}} \\
+        \hline
+    \end{tabular}
+
+    \vspace*{-5pt}
+    \captionof{table}{Bounds for typical values of \bminline{L^\tau} and \bminline{L^\tau_{\textbf{global}}} as \bminline{d_A} or \bminline{d_B} approaches infinity}
+\end{minipage}
+
+\vspace{.5\baselineskip}
+
+Our next and perhaps last step is to find the value around which \bminline{L^\tau_{\textbf{global}}} concentrates when \bminline{d_A} is fixed and \bminline{d_B} approaches infinity.
+
+\vspace{.6\baselineskip}
+
+\section*{Acknowledgements} \vspace{.3\baselineskip}
+\small \textit{I would like to thank Ph.D. candidate Christopher Vairogs for his mentorship, and IQUIST Postdoctoral Scholar Jacob Beckey for advising this project. Also, I would like to thank Illinois Mathematics Lab for supporting this project in the 2025 Spring semester.}
+
+\vspace{.6\baselineskip}
+
+\def\bibfont{\small}
+\printbibliography[title={References}]
+    
+\end{multicols}
+\end{document}
