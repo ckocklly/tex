@@ -1,3 +1,5 @@
+.gitignore
+
 # 'hello' is for testing
 hello**
 .DS_Store
@@ -17,3 +19,7 @@ hello**
 **/*.synctex.gz
 **/*.xml
 **/*Notes.bib
+
+# private files
+amc-tutorial/**
+examples-from-evan-chen/**
